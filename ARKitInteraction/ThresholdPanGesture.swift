@@ -29,6 +29,7 @@ class ThresholdPanGesture: UIPanGestureRecognizer {
                 // Reset threshold check.
                 isThresholdExceeded = false
             }
+            print("UIGestureRecognizerState triggered")
         }
     }
     
@@ -53,9 +54,11 @@ class ThresholdPanGesture: UIPanGestureRecognizer {
         
         if !isThresholdExceeded && translationMagnitude > threshold {
             isThresholdExceeded = true
-            
+            print("Touch threshold exceeded")
             // Set the overall translation to zero as the gesture should now begin.
             setTranslation(.zero, in: view)
+        } else {
+            print("Touch threshold not exceeded")
         }
     }
 }

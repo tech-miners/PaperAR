@@ -28,6 +28,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         didSet {
             guard trackedObject != nil else { return }
             selectedObject = trackedObject
+            //print("Tracking variable:" + String(describing: selectedObject))
         }
     }
     
@@ -47,6 +48,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap(_:)))
         
         // Add gestures to the `sceneView`.
+        print("Setting VirtualObject interactions")
         sceneView.addGestureRecognizer(panGesture)
         sceneView.addGestureRecognizer(rotationGesture)
         sceneView.addGestureRecognizer(tapGesture)
@@ -94,10 +96,29 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      drags a finger across the screen or moves the device through space.
      - Tag: updateObjectToCurrentTrackingPosition
      */
+    var paths : [VirtualObject: LinkedList]
     @objc
     func updateObjectToCurrentTrackingPosition() {
         guard let object = trackedObject, let position = currentTrackingPosition else { return }
-        translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
+        
+        if let path = paths[object] {
+            path.append(position)
+        } else {
+            let newList = LinkedList().append(position)
+            paths[object] = newList
+        }
+        
+        for (object, path) in paths {
+            let nextPos = path.first?.value
+            
+            translate(object, basedOn: nextPos, infinitePlane: translateAssumingInfinitePlane)
+            
+            if (object.position == nextPos) {
+                path.dequeue
+            }
+        }
+        //translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
+        //print("Hiding drag")
     }
 
     /// - Tag: didRotate

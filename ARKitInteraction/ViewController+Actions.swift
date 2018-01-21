@@ -36,9 +36,10 @@ extension ViewController: UIGestureRecognizerDelegate {
     
     /// - Tag: restartExperience
     func restartExperience() {
+        print("restartExperience triggered")
         guard isRestartAvailable, !virtualObjectLoader.isLoading else { return }
         isRestartAvailable = false
-
+        
         statusViewController.cancelAllScheduledMessages()
 
         virtualObjectLoader.removeAllVirtualObjects()
