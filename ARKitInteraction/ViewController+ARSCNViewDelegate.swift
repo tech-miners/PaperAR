@@ -14,6 +14,11 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
             self.virtualObjectInteraction.updateObjectToCurrentTrackingPosition()
+            for object in self.virtualObjectLoader.loadedObjects {
+                if (object.modelName.contains("plane")) {
+                    self.virtualObjectInteraction.movePlane(plane: object)
+                }
+            }
             self.updateFocusSquare()
         }
         

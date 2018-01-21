@@ -26,6 +26,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         virtualObjectInteraction.selectedObject = virtualObject
         //virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
         if (virtualObject.modelName == "paper_airplane"){
+            print("Positioning plane")
             let nPos = float3(x:0.1,y:0.1,z:0.1);
             let tmpF = float4(0,0,0,0);
             let relTo = matrix_float4x4(tmpF,tmpF,tmpF,tmpF);

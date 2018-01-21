@@ -22,6 +22,8 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      */
     var selectedObject: VirtualObject?
     
+    var target : VirtualObject
+    
     /// The object that is tracked for use by the pan and rotation gestures.
     private var trackedObject: VirtualObject? {
         didSet {
@@ -122,6 +124,11 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         }
         //translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
         //print("Hiding drag")
+    }
+    
+    func movePlane(plane: VirtualObject) {
+        let vel = SCNVector3(0.001 + plane.position.x, 0 + plane.position.y, 0 + plane.position.z)
+        plane.position = vel
     }
 
     /// - Tag: didRotate
