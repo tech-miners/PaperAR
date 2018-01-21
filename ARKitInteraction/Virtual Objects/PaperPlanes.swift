@@ -1,15 +1,16 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-A `SCNReferenceNode` subclass for virtual objects placed into the AR scene.
-*/
+//
+//  PaperPlanes.swift
+//  ARKitInteraction
+//
+//  Created by Daniil Gannota on 21/01/2018.
+//  Copyright © 2018 Apple. All rights reserved.
+//
 
 import Foundation
 import SceneKit
 import ARKit
 
-class VirtualObject: SCNReferenceNode {
+class PaperPlanes: SCNReferenceNode {
     
     /// The model name derived from the `referenceURL`.
     var modelName: String {
@@ -23,7 +24,7 @@ class VirtualObject: SCNReferenceNode {
     func reset() {
         recentVirtualObjectDistances.removeAll()
     }
-	
+    
     /**
      Set the object's position based on the provided position relative to the `cameraTransform`.
      If `smoothMovement` is true, the new position will be averaged with previous position to
@@ -96,48 +97,34 @@ class VirtualObject: SCNReferenceNode {
     }
 }
 
-extension VirtualObject {
+extension PaperPlanes {
     // MARK: Static Properties and Methods
     
     /// Loads all the model objects within `Models.scnassets`.
-    static let availableObjects: [VirtualObject] = {
-        let modelsURL = Bundle.main.url(forResource: "Models.scnassets", withExtension: nil)!
-
+    static let availableObjects: [PaperPlanes] = {
+        let modelsURL = Bundle.main.url(forResource: "art.scnassets", withExtension: nil)!
+        
         let fileEnumerator = FileManager().enumerator(at: modelsURL, includingPropertiesForKeys: [])!
-
+        
         return fileEnumerator.flatMap { element in
             let url = element as! URL
-
+            
             guard url.pathExtension == "scn" else { return nil }
-
-            return VirtualObject(url: url)
+            
+            return PaperPlanes(url: url)
         }
     }()
     
-    /// Returns a `VirtualObject` if one exists as an ancestor to the provided node.
-    static func existingObjectContainingNode(_ node: SCNNode) -> VirtualObject? {
-        if let virtualObjectRoot = node as? VirtualObject {
+    /// Returns a `PaperPlanes` if one exists as an ancestor to the provided node.
+    static func existingObjectContainingNode(_ node: SCNNode) -> PaperPlanes? {
+        if let virtualObjectRoot = node as? PaperPlanes {
             return virtualObjectRoot
         }
         
         guard let parent = node.parent else { return nil }
         
-        // Recurse up to check if the parent is a `VirtualObject`.
+        // Recurse up to check if the parent is a `PaperPlanes`.
         return existingObjectContainingNode(parent)
     }
 }
 
-extension Collection where Iterator.Element == Float, IndexDistance == Int {
-    /// Return the mean of a list of Floats. Used with `recentVirtualObjectDistances`.
-    var average: Float? {
-        guard !isEmpty else {
-            return nil
-        }
-
-        let sum = reduce(Float(0)) { current, next -> Float in
-            return current + next
-        }
-
-        return sum / Float(count)
-    }
-}
