@@ -27,14 +27,15 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
         //virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
         if (virtualObject.modelName == "paper_airplane"){
             print("Positioning plane")
-            let nPos = float3(x:0.1,y:0.1,z:0.1);
+            let nPos = float3(x:0.15,y:0.15,z:0.15);
             let tmpF = float4(0,0,0,0);
             let relTo = matrix_float4x4(tmpF,tmpF,tmpF,tmpF);
-            
+
             virtualObject.setPosition(nPos, relativeTo: relTo, smoothMovement: false);
         }
         else
         {
+            print("Placing target")
             virtualObject.setPosition(focusSquarePosition, relativeTo: cameraTransform, smoothMovement: false)
         }
         
@@ -52,6 +53,7 @@ extension ViewController: VirtualObjectSelectionViewControllerDelegate {
                 self.placeVirtualObject(loadedObject)
             }
         })
+
 
         displayObjectLoadingUI()
     }

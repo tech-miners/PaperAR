@@ -50,8 +50,8 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         // Add gestures to the `sceneView`.
         print("Setting VirtualObject interactions")
         sceneView.addGestureRecognizer(panGesture)
-        sceneView.addGestureRecognizer(rotationGesture)
-        sceneView.addGestureRecognizer(tapGesture)
+        //sceneView.addGestureRecognizer(rotationGesture)
+        //sceneView.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - Gesture Actions
@@ -127,29 +127,70 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     }
     
     func movePlane(plane: VirtualObject) {
-        var targPos : SCNVector3
+        //var targPos : SCNVector3 = SCNVector3(0.01,0.01,0.01)
+        var targPos : SCNVector3 = SCNVector3(target.position.x, target.position.y,target.position.z)
+        //var targPosFloat3 : float3
         if let path = paths[plane] {
-            targPos = translate(path.first)??????
+            //targPos = translate(path.first)
+            //targPosFloat3 = float3(x:0.01, y:0.01, z:0.01)
         } else {
-            targPos = target.position
+            //targPosFloat3 = float3(x:target.position.x+0.01, y:target.position.y+0.01, z:target.position.z+0.01)
+            //targPos = target.position
+            targPos = SCNVector3(target.position.x, target.position.y,target.position.z)
         }
-        let direction : SCNVector3 = getDirection(source: plane.position, target: targPos)
+        let direction : SCNVector3 = getDirection(source: plane.position, target: target.position)
+        plane.position.x = plane.position.x + direction.x
+        plane.position.y = plane.position.y + direction.y
+        plane.position.z = plane.position.z + direction.z
+        //plane.setPosition(targPosFloat3, relativeTo: relTo, smoothMovement: true);
+        //let nPos = float3(x:targPos.x ,y:targPos.y ,z:targPos.z);
+        //let nPos = targPos
+        //let tmpF = float4(0,0,0,0);
+        //let relTo = matrix_float4x4(tmpF,tmpF,tmpF,tmpF);
+//        plane.setPosition(targPosFloat3, relativeTo: relTo, smoothMovement: true);
+        print("Plane x position" + plane.position.x.debugDescription)
+        print("Plane y position" + plane.position.y.debugDescription)
+        print("Plane z position" + String(plane.position.z))
+        print("target x position" + target.position.x.debugDescription)
+        print("target y position" + target.position.y.debugDescription)
+        print("target z position" + target.position.z.debugDescription)
+        
     }
     
     func getDirection(source : SCNVector3, target : SCNVector3) -> SCNVector3 {
-        let velocity = 0.01
+        let velocity = 0.001
         var tmp = target.x - source.x
         let x = (tmp) >= 0 ? tmp : -tmp
         tmp = target.y - source.y
         let y = (tmp) >= 0 ? tmp : -tmp
         tmp = target.z - source.z
         let z = (tmp) >= 0 ? tmp : -tmp
+        /*var x = (tmp) >= 0 ? velocity : -velocity
+        if tmp == 0{
+            x = 0
+        }
+        tmp = target.y - source.y
+        var y = (tmp) >= 0 ? velocity : -velocity
+        if tmp == 0{
+            y = 0
+        }
+        tmp = target.z - source.z
+        var z = (tmp) >= 0 ? velocity : -velocity
+        if tmp == 0{
+            z = 0
+        }*/
+        //print("X IS " + x.debugDescription)
         let divis = normalize(float3(x, y, z)) / (Float(velocity))
         //let divis = (Double) pow(x, 2) + pow(y, 2) + pow(z, 2)
-        let tmp2 = Float(abs(divis))
-        let vel = SCNVector3(x/tmp2, y/tmp2, z/tmp2)
+        let tmp2 = abs(divis)
+        //print("divis is: " + divis.debugDescription)
+        let vel = vector3 (x, y, z) / tmp2
+        print("vel: " + vel.debugDescription)
+        //let vel = SCNVector3(x/tmp2, y/tmp2, z/tmp2)
+        //print("Plane moving to: " + vel.debugDescription)
         
-        return vel
+        return SCNVector3(-vel.x, -vel.y, -vel.z)
+        //return SCNVector3(x, y, z)
     }
 
     /// - Tag: didRotate

@@ -14,17 +14,46 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
             self.virtualObjectInteraction.updateObjectToCurrentTrackingPosition()
+            
             for object in self.virtualObjectLoader.loadedObjects {
+                if (!object.isLoaded) {
+                    break;
+                }
                 if (object.modelName.contains("plane")) {
+                    print("Seen object" + object.modelName)
+                    //print("plane coordinates" + object.position.x.debugDescription)
                     self.virtualObjectInteraction.movePlane(plane: object)
-                } else {
-                    if self.virtualObjectInteraction.target == nil {
+                } else if (object.modelName.contains("purple")){
+                    print("Seen object" + object.modelName)
+                    if (self.virtualObjectInteraction.target != object){
                         self.virtualObjectInteraction.target = object
+                        print("target coordinates" + object.position.x.debugDescription)
+                        
+                        
                     }
                 }
             }
             self.updateFocusSquare()
         }
+//        func renderer(_ renderer: SCNSceneRenderer,
+//                     didRenderScene scene: SCNScene,
+//                     atTime time: TimeInterval){
+//
+//            for object in self.virtualObjectLoader.loadedObjects {
+//                if (!object.isLoaded) {
+//                    break;
+//                }
+//
+//            if (object.modelName.contains("plane")) {
+//                print("Seen object" + object.modelName)
+//                self.virtualObjectInteraction.movePlane(plane: object)
+//            } else if (object.modelName.contains("purple")){
+//            print("Seen object" + object.modelName)
+//                self.virtualObjectInteraction.target = object
+//                let blah = object.position.x
+//                }
+//            }
+//        }
         
         // If light estimation is enabled, update the intensity of the model's lights and the environment map
         let baseIntensity: CGFloat = 40
