@@ -62,6 +62,10 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
         case .began:
             // Check for interaction with a new object.
             if let object = objectInteracting(with: gesture, in: sceneView) {
+                if (object.modelName == "target")
+                {
+                    break;
+                }
                 trackedObject = object
             }
             
