@@ -55,13 +55,19 @@ class VirtualObjectSelectionViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let object = virtualObjects[indexPath.row]
+        //let object = virtualObjects[indexPath.row]
+        // 0 is Plane
+        let object = virtualObjects[0]
+        let object2 = virtualObjects[1]
+        
         
         // Check if the current row is already selected, then deselect it.
         if selectedVirtualObjectRows.contains(indexPath.row) {
             delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object)
+            delegate?.virtualObjectSelectionViewController(self, didDeselectObject: object2)
         } else {
             delegate?.virtualObjectSelectionViewController(self, didSelectObject: object)
+            delegate?.virtualObjectSelectionViewController(self, didSelectObject: object2)
         }
 
         dismiss(animated: true, completion: nil)
