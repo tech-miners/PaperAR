@@ -17,6 +17,10 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
             for object in self.virtualObjectLoader.loadedObjects {
                 if (object.modelName.contains("plane")) {
                     self.virtualObjectInteraction.movePlane(plane: object)
+                } else {
+                    if self.virtualObjectInteraction.target == nil {
+                        self.virtualObjectInteraction.target = object
+                    }
                 }
             }
             self.updateFocusSquare()

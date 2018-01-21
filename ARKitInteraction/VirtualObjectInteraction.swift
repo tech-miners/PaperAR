@@ -22,7 +22,7 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      */
     var selectedObject: VirtualObject?
     
-    var target : VirtualObject
+    var target : VirtualObject!
     
     /// The object that is tracked for use by the pan and rotation gestures.
     private var trackedObject: VirtualObject? {
@@ -127,8 +127,29 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     }
     
     func movePlane(plane: VirtualObject) {
-        let vel = SCNVector3(0.001 + plane.position.x, 0 + plane.position.y, 0 + plane.position.z)
-        plane.position = vel
+        var targPos : SCNVector3
+        if let path = paths[plane] {
+            targPos = translate(path.first)??????
+        } else {
+            targPos = target.position
+        }
+        let direction : SCNVector3 = getDirection(source: plane.position, target: targPos)
+    }
+    
+    func getDirection(source : SCNVector3, target : SCNVector3) -> SCNVector3 {
+        let velocity = 0.01
+        var tmp = target.x - source.x
+        let x = (tmp) >= 0 ? tmp : -tmp
+        tmp = target.y - source.y
+        let y = (tmp) >= 0 ? tmp : -tmp
+        tmp = target.z - source.z
+        let z = (tmp) >= 0 ? tmp : -tmp
+        let divis = normalize(float3(x, y, z)) / (Float(velocity))
+        //let divis = (Double) pow(x, 2) + pow(y, 2) + pow(z, 2)
+        let tmp2 = Float(abs(divis))
+        let vel = SCNVector3(x/tmp2, y/tmp2, z/tmp2)
+        
+        return vel
     }
 
     /// - Tag: didRotate
