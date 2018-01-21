@@ -11,6 +11,7 @@ import ARKit
 
 class VirtualObject: SCNReferenceNode {
     
+
     /// The model name derived from the `referenceURL`.
     var modelName: String {
         return referenceURL.lastPathComponent.replacingOccurrences(of: ".scn", with: "")
@@ -18,7 +19,7 @@ class VirtualObject: SCNReferenceNode {
     
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.
     private var recentVirtualObjectDistances = [Float]()
-    
+        
     /// Resets the objects poisition smoothing.
     func reset() {
         recentVirtualObjectDistances.removeAll()
@@ -94,6 +95,9 @@ class VirtualObject: SCNReferenceNode {
             SCNTransaction.commit()
         }
     }
+    
+    
+    
 }
 
 extension VirtualObject {

@@ -10,7 +10,6 @@ import ARKit
 
 /// - Tag: VirtualObjectInteraction
 class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
-    
     /// Developer setting to translate assuming the detected plane extends infinitely.
     let translateAssumingInfinitePlane = true
     
@@ -38,7 +37,6 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
     init(sceneView: VirtualObjectARView) {
         self.sceneView = sceneView
         super.init()
-        
         let panGesture = ThresholdPanGesture(target: self, action: #selector(didPan(_:)))
         panGesture.delegate = self
         
@@ -100,26 +98,27 @@ class VirtualObjectInteraction: NSObject, UIGestureRecognizerDelegate {
      drags a finger across the screen or moves the device through space.
      - Tag: updateObjectToCurrentTrackingPosition
      */
-    var paths : [VirtualObject: LinkedList]
+    var paths = [VirtualObject: LinkedList]()
     @objc
     func updateObjectToCurrentTrackingPosition() {
         guard let object = trackedObject, let position = currentTrackingPosition else { return }
         
         if let path = paths[object] {
-            path.append(position)
+            path.append(value:position)
         } else {
-            let newList = LinkedList().append(position)
+            let newList = LinkedList()
+            newList.append(value:position)
             paths[object] = newList
         }
         
         for (object, path) in paths {
             let nextPos = path.first?.value
             
-            translate(object, basedOn: nextPos, infinitePlane: translateAssumingInfinitePlane)
-            
-            if (object.position == nextPos) {
-                path.dequeue
+            if let pos = nextPos {
+                translate(object, basedOn: pos, infinitePlane: translateAssumingInfinitePlane)
             }
+            
+            
         }
         //translate(object, basedOn: position, infinitePlane: translateAssumingInfinitePlane)
         //print("Hiding drag")
